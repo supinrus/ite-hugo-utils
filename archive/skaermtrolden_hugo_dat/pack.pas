@@ -1,0 +1,55 @@
+var head:array [0..3160] of byte;
+head1:array [0..3] of byte;
+buf:array [0..3000000] of byte;
+f:file of byte;
+i,num,j,ofs,k,ofss,sz,tmp:longint;
+name,ext:string;
+begin
+	assign(f,'HUGO.DIR');
+	reset(f);
+	BlockRead(f,head1[0],4);
+	num:=head1[2]+head1[3]*256;
+	BlockRead(f,head[0],3156);
+	close(f);
+	ofss:=0;
+	for i:=0 to num-1 do begin
+		name:='';
+		j:=i*$C+7;
+		while (head[j]=$20) do dec(j);
+		while j>=i*$C do begin name:=chr(head[j])+name; dec(j); end;
+		ofs:=head[i*$C+8]+head[i*$C+9]*256;
+		k:=head[i*$C+10]+head[i*$C+11]*256;
+		for j:=0 to k-1 do begin
+			ext:=chr(head[num*$c+ofs+j*$C])+chr(head[num*$c+ofs+j*$C+1])+chr(head[num*$c+ofs+j*$C+2]);
+			writeln(name+'.'+ext);
+			assign(f,'files/'+name+'.'+ext);
+			reset(f);
+			BlockRead(f,buf[ofss],$10000,sz);
+			close(f);
+			tmp:=ofss;
+			head[num*$c+ofs+j*$C+3]:=tmp mod 256;
+			tmp:=tmp div 256;
+			head[num*$c+ofs+j*$C+4]:=tmp mod 256;
+			tmp:=tmp div 256;
+			head[num*$c+ofs+j*$C+5]:=tmp mod 256;
+			tmp:=sz;
+			head[num*$c+ofs+j*$C+6]:=tmp mod 256;
+			tmp:=tmp div 256;
+			head[num*$c+ofs+j*$C+7]:=tmp mod 256;
+			head[num*$c+ofs+j*$C+8]:=0;
+			head[num*$c+ofs+j*$C+9]:=0;
+			head[num*$c+ofs+j*$C+10]:=0;
+			head[num*$c+ofs+j*$C+11]:=1;
+			ofss:=ofss+sz;
+		end;
+	end;
+	assign(f,'HUGO.DIR');
+	rewrite(f);
+	BlockWrite(f,head1[0],4);
+	BlockWrite(f,head[0],3156);
+	close(f);
+	assign(f,'HUGO.001');
+	rewrite(f);
+	BlockWrite(f,buf[0],ofss);
+	close(f);
+end.
