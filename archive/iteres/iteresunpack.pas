@@ -61,15 +61,15 @@ begin
 			inc(i);
 		end;
 		inc(i);
-		write(fname);
-		fname:=SuperMkDir('.\'+di+'\'+fname);
+		write(fname+'...');
+		fname:=SuperMkDir(di+'\'+fname);
 		seek(fin,strt+offs);
 		BlockRead(fin,buf[0],sizefl);
 		assign(fout,fname);
 		rewrite(fout);
 		BlockWrite(fout,buf[0],sizefl);
 		close(fout);
-		writeln('...OK');
+		writeln('OK');
 	end;
 	close(fin);
 end.
