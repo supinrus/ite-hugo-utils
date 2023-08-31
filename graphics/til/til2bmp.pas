@@ -7,6 +7,18 @@ dir:string;
 f:file of byte;
 sz,kol,w,h,w1,h1,i,j,k,l,z,fps:longint;
 
+function superChange(myfn:string):string;
+var tmps:string;
+ii:longint;
+begin
+	tmps:='';
+	for ii:=1 to length(myfn) do if myfn[ii]='\' then begin
+		//if not DirectoryExists(tmps) then MkDir(tmps);
+		tmps:=tmps+'/'
+	end else tmps:=tmps+myfn[ii];
+	superChange:=tmps;
+end;
+
 procedure mkheadbmp(w,h:longint);
 var t:longint;
 ii:longint;
@@ -62,7 +74,7 @@ begin
   writeln('Usage: til2bmp movie.til');
   exit;
  end;
- fn:=ParamStr(1);//'TRACKCB.TIL';
+ fn:=superChange(ParamStr(1));//'TRACKCB.TIL';
  if not FileExists(fn) then begin
   writeln(fn+': File not found');
   exit;

@@ -11,6 +11,18 @@ sz,w,h,num,fps,offset:longint;
 i,j,k,l:longint;
 bt,b1,b2,rz:longint;
 
+function superChange(myfn:string):string;
+var tmps:string;
+ii:longint;
+begin
+	tmps:='';
+	for ii:=1 to length(myfn) do if myfn[ii]='\' then begin
+		//if not DirectoryExists(tmps) then MkDir(tmps);
+		tmps:=tmps+'/'
+	end else tmps:=tmps+myfn[ii];
+	superChange:=tmps;
+end;
+
 procedure mkheadbmp(w,h:longint);
 var t:longint;
 ii:longint;
@@ -166,7 +178,7 @@ begin
 		writeln('Usage: lzp2bmp movie.lzp [palette.{pal,lzp,cgf,til}]');
 		exit;
 	end; 
-	fn:=ParamStr(1);
+	fn:=superChange(ParamStr(1));
 	if not FileExists(fn) then begin
 		writeln(fn,': File not found');
 		exit;
@@ -178,7 +190,7 @@ begin
 	reset(f);
 	BlockRead(f,lzphead[0],32);
 	BlockRead(f,pal[0],768);
-	if (ParamCount=2) then PalLoaded(ParamStr(2));
+	if (ParamCount=2) then PalLoaded(superChange(ParamStr(2)));
 	pal[0]:=0;
 	pal[1]:=0;
 	pal[2]:=0;

@@ -12,6 +12,18 @@ f,bmpf:file of byte;
 nmb:longint;
 i,j,k:longint;
 
+function superChange(myfn:string):string;
+var tmps:string;
+ii:longint;
+begin
+	tmps:='';
+	for ii:=1 to length(myfn) do if myfn[ii]='\' then begin
+		//if not DirectoryExists(tmps) then MkDir(tmps);
+		tmps:=tmps+'/'
+	end else tmps:=tmps+myfn[ii];
+	superChange:=tmps;
+end;
+
 procedure mkheadbmp(w,h:longint);
 var t:longint;
 ii:longint;
@@ -157,7 +169,7 @@ begin
 		writeln('Usage: cgf2bmp pictures.cgf [palette.{pal;cgf;lzp;til}]');
 		exit;
 	end;
-	fn:=ParamStr(1);
+	fn:=superChange(ParamStr(1));
 	if not FileExists(fn) then begin
 		writeln(fn,': File not exists');
 		exit;
@@ -177,7 +189,7 @@ begin
 	BlockRead(f,cgfdata[0],szdata);
 	if (numpal=0) or (ParamCount>=2) then begin
 		if ParamCount>=2 then begin
-			pln:=ParamStr(2);
+			pln:=superChange(ParamStr(2));
 			if not PalLoaded(pln) then begin
 				close(f);
 				exit;

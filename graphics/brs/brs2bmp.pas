@@ -10,6 +10,18 @@ i,j,k,n:longint;
 w,h,xpos,ypos:longint;
 headbmp:array [0..53] of byte;
 
+function superChange(myfn:string):string;
+var tmps:string;
+ii:longint;
+begin
+	tmps:='';
+	for ii:=1 to length(myfn) do if myfn[ii]='\' then begin
+		//if not DirectoryExists(tmps) then MkDir(tmps);
+		tmps:=tmps+'/'
+	end else tmps:=tmps+myfn[ii];
+	superChange:=tmps;
+end;
+
 procedure mkheadbmp(w,h:longint);
 var t:longint;
 ii:longint;
@@ -176,12 +188,12 @@ begin
 		writeln('Usage: cbr2bmp file.cbr palette.{raw,til,cgf,pal,lzp,blk}');
 		exit;
 	end;
-	fn:=paramstr(1);
+	fn:=superChange(paramstr(1));
 	if not FileExists(fn) then begin
 		writeln(fn+': File not found');
 		exit;
 	end;
-	if not PalLoaded(paramstr(2)) then begin
+	if not PalLoaded(superChange(paramstr(2))) then begin
 		writeln('Error: Pallete not loaded');
 		exit;
 	end;
