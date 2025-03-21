@@ -91,8 +91,8 @@ jobs:
         choco install make -y
 
     - name: Add FreePascal to PATH
-      run: echo "C:\\tools\\freepascal\\" >> $GITHUB_PATH
-        
+      run: echo "C:\\tools\\freepascal\\bin\\i386-Win32" >> $GITHUB_PATH
+
     - name: Compile Pascal code
       run: |
         make build
