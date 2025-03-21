@@ -53,7 +53,7 @@ jobs:
 
     - name: Install Free Pascal
       run: |
-        sudo brew install fpc
+        brew install fpc
 
     - name: Compile Pascal code
       run: |
