@@ -124,10 +124,11 @@ jobs:
         # Create the bin directory if it doesn't exist
         New-Item -ItemType Directory -Force -Path "$MAKEFILE_DIR\bin"
 
+        $FPC_PATH = "C:\tools\freepascal\bin\i386-Win32\fpc.exe"
         foreach ($file in $PAS_FILES) {
             $dir = Split-Path $file
             Set-Location -Path $dir
-            & "fpc" "-o$file" "$file.pas"
+            & "$FPC_PATH" "-o$file" "$file.pas"
             Move-Item "$file" "$MAKEFILE_DIR\bin\"
         }
 
