@@ -1,0 +1,46 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y fpc
+
+    - name: Create output directory
+      run: |
+        mkdir -p ite-hugo-utils
+
+    - name: Compile Pascal code
+      run: |
+        # Find all .pas files and compile them
+        find . -name "*.pas" -exec fpc -oite-hugo-utils/{} {} \;
+
+    - name: Compress binaries
+      run: |
+        # Compress the compiled binaries into a tar.gz file
+        tar -czf ite-hugo-utils.tar.gz -C ite-hugo-utils .
+        
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils.tar.gz 
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: compiled-binaries
+        path: ite-hugo-utils.tar.gz
