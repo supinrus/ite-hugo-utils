@@ -74,3 +74,39 @@ jobs:
       with:
         name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
         path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+  windows:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [windows-latest]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        choco install fpc -y
+        choco install make -y
+
+    - name: Compile Pascal code
+      run: |
+        make build
+
+    - name: Compress binaries (ZIP)
+      run: |
+        7z a ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip bin\*
+
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip
+
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
+        path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip
