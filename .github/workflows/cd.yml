@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  linux:
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
@@ -20,6 +20,40 @@ jobs:
       run: |
         sudo apt update -y
         sudo apt install -y fpc
+
+    - name: Compile Pascal code
+      run: |
+        make build
+
+    - name: Compress binaries
+      run: |
+        tar -czf ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+        
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
+        path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+  macOS:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [macos-latest]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        sudo brew install fpc
 
     - name: Compile Pascal code
       run: |
