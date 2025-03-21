@@ -16,22 +16,16 @@ jobs:
 
     - name: Install Free Pascal
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y fpc
-
-    - name: Create output directory
-      run: |
-        mkdir -p ite-hugo-utils
+        sudo apt update -y
+        sudo apt install -y fpc
 
     - name: Compile Pascal code
       run: |
-        # Find all .pas files and compile them
-        find . -name "*.pas" -exec fpc -oite-hugo-utils/{} {} \;
+        make build
 
     - name: Compress binaries
       run: |
-        # Compress the compiled binaries into a tar.gz file
-        tar -czf ite-hugo-utils.tar.gz -C ite-hugo-utils .
+        tar -czf ite-hugo-utils.tar.gz -C bin .
         
     - name: Create release
       if: success()
