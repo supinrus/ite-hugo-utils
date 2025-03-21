@@ -30,3 +30,7 @@ build:
 		fpc -o$$file $$file.pas  && \
 		mv $$file $(MAKEFILE_DIR)/bin/; \
 	done
+
+clean:
+	rm -rf $(MAKEFILE_DIR)/bin
+	find . -name "*.o" -exec rm -f {} \;
