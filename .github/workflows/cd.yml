@@ -87,7 +87,7 @@ jobs:
 
     - name: Install Free Pascal
       run: |
-        choco install fpc -y
+        choco install freepascal -y
         choco install make -y
 
     - name: Compile Pascal code
