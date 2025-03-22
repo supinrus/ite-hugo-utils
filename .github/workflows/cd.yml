@@ -85,6 +85,17 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v4
 
+    - name: Cache Free Pascal and Make
+      uses: actions/cache@v3
+      with:
+        path: |
+          C:\ProgramData\chocolatey\bin
+          C:\ProgramData\chocolatey\lib
+          C:\tools\freepascal
+        key: ${{ runner.os }}-${{ runner.arch }}-choco-${{ hashFiles('**/makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-choco-      
+
     - name: Install Free Pascal
       run: |
         choco install freepascal -y
