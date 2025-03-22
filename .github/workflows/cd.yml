@@ -121,7 +121,8 @@ jobs:
 
     - name: Compress binaries (ZIP)
       run: |
-        7z a ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip bin\*.exe
+        cd bin
+        7z a ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip *.exe
 
     - name: Create release
       if: success()
