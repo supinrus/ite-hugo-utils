@@ -91,38 +91,38 @@ jobs:
         choco install make -y
 
     - name: Add FreePascal to PATH
+      shell: cmd
       run: echo "C:\\tools\\freepascal\\bin\\i386-Win32" >> $GITHUB_PATH
 
     - name: Compile Pascal code
       shell: cmd
       run: |
         mkdir bin
-        set FPC_PATH="C:\tools\freepascal\bin\i386-Win32\fpc.exe"
-        %FPC_PATH% archive\bigfile\bigfileunpacker.pas -obin\bigfileunpacker.exe
-        %FPC_PATH% archive\hugo5dos\unpackhugo5dat.pas -obin\unpackhugo5dat.exe
-        %FPC_PATH% archive\hugo4dos\unpackhugo4dat.pas -obin\unpackhugo4dat.exe
-        %FPC_PATH% archive\hugo_magick_oak\resdatunpack.pas -obin\resdatunpack.exe
-        %FPC_PATH% archive\iteres\iteresunpack.pas -obin\iteresunpack.exe
-        %FPC_PATH% archive\hugo3dos\unpack4hugo.pas -obin\unpack4hugo.exe
-        %FPC_PATH% archive\skaermtrolden_hugo_dat\pack.pas -obin\pack.exe
-        %FPC_PATH% archive\skaermtrolden_hugo_dat\unpack2.pas -obin\unpack2.exe
-        %FPC_PATH% archive\hugoxl\unpackmiscdat.pas -obin\unpackmiscdat.exe
-        %FPC_PATH% archive\hugoxl\unpack_sbk.pas -obin\unpack_sbk.exe
-        %FPC_PATH% config\hugoxl\unpack_cfb.pas -obin\unpack_cfb.exe
-        %FPC_PATH% sync\oos\txt2oos.pas -obin\txt2oos.exe
-        %FPC_PATH% sync\oos\oos2txt.pas -obin\oos2txt.exe
-        %FPC_PATH% graphics\cbr\cbr2bmp.pas -obin\cbr2bmp.exe
-        %FPC_PATH% graphics\brs\brs2bmp.pas -obin\brs2bmp.exe
-        %FPC_PATH% graphics\skaermtrolden_speach_cloud\decodespeach2.pas -obin\decodespeach2.exe
-        %FPC_PATH% graphics\skaermtrolden_speach_cloud\encodespeach.pas -obin\encodespeach.exe
-        %FPC_PATH% graphics\lzp\lzp2bmp.pas -obin\lzp2bmp.exe
-        %FPC_PATH% graphics\cgf\cgf2bmp.pas -obin\cgf2bmp.exe
-        %FPC_PATH% graphics\til\til2bmp.pas -obin\til2bmp.exe
-        %FPC_PATH% graphics\pbr\pbr2bmp.pas -obin\pbr2bmp.exe
+        fpc archive\bigfile\bigfileunpacker.pas -obin\bigfileunpacker.exe
+        fpc archive\hugo5dos\unpackhugo5dat.pas -obin\unpackhugo5dat.exe
+        fpc archive\hugo4dos\unpackhugo4dat.pas -obin\unpackhugo4dat.exe
+        fpc archive\hugo_magick_oak\resdatunpack.pas -obin\resdatunpack.exe
+        fpc archive\iteres\iteresunpack.pas -obin\iteresunpack.exe
+        fpc archive\hugo3dos\unpack4hugo.pas -obin\unpack4hugo.exe
+        fpc archive\skaermtrolden_hugo_dat\pack.pas -obin\pack.exe
+        fpc archive\skaermtrolden_hugo_dat\unpack2.pas -obin\unpack2.exe
+        fpc archive\hugoxl\unpackmiscdat.pas -obin\unpackmiscdat.exe
+        fpc archive\hugoxl\unpack_sbk.pas -obin\unpack_sbk.exe
+        fpc config\hugoxl\unpack_cfb.pas -obin\unpack_cfb.exe
+        fpc sync\oos\txt2oos.pas -obin\txt2oos.exe
+        fpc sync\oos\oos2txt.pas -obin\oos2txt.exe
+        fpc graphics\cbr\cbr2bmp.pas -obin\cbr2bmp.exe
+        fpc graphics\brs\brs2bmp.pas -obin\brs2bmp.exe
+        fpc graphics\skaermtrolden_speach_cloud\decodespeach2.pas -obin\decodespeach2.exe
+        fpc graphics\skaermtrolden_speach_cloud\encodespeach.pas -obin\encodespeach.exe
+        fpc graphics\lzp\lzp2bmp.pas -obin\lzp2bmp.exe
+        fpc graphics\cgf\cgf2bmp.pas -obin\cgf2bmp.exe
+        fpc graphics\til\til2bmp.pas -obin\til2bmp.exe
+        fpc graphics\pbr\pbr2bmp.pas -obin\pbr2bmp.exe
 
     - name: Compress binaries (ZIP)
       run: |
-        7z a ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip bin\*
+        7z a ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip bin\*.exe
 
     - name: Create release
       if: success()
