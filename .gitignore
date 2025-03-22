@@ -1,3 +1,5 @@
 *.o
 *.exe
 bin
+*.tar.gz
+*.zip
