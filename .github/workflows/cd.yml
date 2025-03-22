@@ -94,43 +94,31 @@ jobs:
       run: echo "C:\\tools\\freepascal\\bin\\i386-Win32" >> $GITHUB_PATH
 
     - name: Compile Pascal code
+      shell: cmd
       run: |
-        $MAKEFILE_DIR = Get-Location
-
-        $PAS_FILES = @(
-            "./archive/bigfile/bigfileunpacker",
-            "./archive/hugo5dos/unpackhugo5dat",
-            "./archive/hugo4dos/unpackhugo4dat",
-            "./archive/hugo_magick_oak/resdatunpack",
-            "./archive/iteres/iteresunpack",
-            "./archive/hugo3dos/unpack4hugo",
-            "./archive/skaermtrolden_hugo_dat/pack",
-            "./archive/skaermtrolden_hugo_dat/unpack2",
-            "./archive/hugoxl/unpackmiscdat",
-            "./archive/hugoxl/unpack_sbk",
-            "./config/hugoxl/unpack_cfb",
-            "./sync/oos/txt2oos",
-            "./sync/oos/oos2txt",
-            "./graphics/cbr/cbr2bmp",
-            "./graphics/brs/brs2bmp",
-            "./graphics/skaermtrolden_speach_cloud/decodespeach2",
-            "./graphics/skaermtrolden_speach_cloud/encodespeach",
-            "./graphics/lzp/lzp2bmp",
-            "./graphics/cgf/cgf2bmp",
-            "./graphics/til/til2bmp",
-            "./graphics/pbr/pbr2bmp"
-        )
-
-        # Create the bin directory if it doesn't exist
-        New-Item -ItemType Directory -Force -Path "$MAKEFILE_DIR\bin"
-
-        $FPC_PATH = "C:\tools\freepascal\bin\i386-Win32\fpc.exe"
-        foreach ($file in $PAS_FILES) {
-            $dir = Split-Path $file
-            Set-Location -Path $dir
-            & "$FPC_PATH" "-o$file" "$file.pas"
-            Move-Item "$file" "$MAKEFILE_DIR\bin\"
-        }
+        mkdir bin
+        set FPC_PATH="C:\tools\freepascal\bin\i386-Win32\fpc.exe"
+        %FPC_PATH% archive\bigfile\bigfileunpacker.pas -obin\bigfileunpacker.exe
+        %FPC_PATH% archive\hugo5dos\unpackhugo5dat.pas -obin\unpackhugo5dat.exe
+        %FPC_PATH% archive\hugo4dos\unpackhugo4dat.pas -obin\unpackhugo4dat.exe
+        %FPC_PATH% archive\hugo_magick_oak\resdatunpack.pas -obin\resdatunpack.exe
+        %FPC_PATH% archive\iteres\iteresunpack.pas -obin\iteresunpack.exe
+        %FPC_PATH% archive\hugo3dos\unpack4hugo.pas -obin\unpack4hugo.exe
+        %FPC_PATH% archive\skaermtrolden_hugo_dat\pack.pas -obin\pack.exe
+        %FPC_PATH% archive\skaermtrolden_hugo_dat\unpack2.pas -obin\unpack2.exe
+        %FPC_PATH% archive\hugoxl\unpackmiscdat.pas -obin\unpackmiscdat.exe
+        %FPC_PATH% archive\hugoxl\unpack_sbk.pas -obin\unpack_sbk.exe
+        %FPC_PATH% config\hugoxl\unpack_cfb.pas -obin\unpack_cfb.exe
+        %FPC_PATH% sync\oos\txt2oos.pas -obin\txt2oos.exe
+        %FPC_PATH% sync\oos\oos2txt.pas -obin\oos2txt.exe
+        %FPC_PATH% graphics\cbr\cbr2bmp.pas -obin\cbr2bmp.exe
+        %FPC_PATH% graphics\brs\brs2bmp.pas -obin\brs2bmp.exe
+        %FPC_PATH% graphics\skaermtrolden_speach_cloud\decodespeach2.pas -obin\decodespeach2.exe
+        %FPC_PATH% graphics\skaermtrolden_speach_cloud\encodespeach.pas -obin\encodespeach.exe
+        %FPC_PATH% graphics\lzp\lzp2bmp.pas -obin\lzp2bmp.exe
+        %FPC_PATH% graphics\cgf\cgf2bmp.pas -obin\cgf2bmp.exe
+        %FPC_PATH% graphics\til\til2bmp.pas -obin\til2bmp.exe
+        %FPC_PATH% graphics\pbr\pbr2bmp.pas -obin\pbr2bmp.exe
 
     - name: Compress binaries (ZIP)
       run: |
