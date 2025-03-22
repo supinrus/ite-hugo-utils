@@ -116,7 +116,7 @@ jobs:
         %FPC_PATH% graphics\cgf\cgf2bmp.pas -obin\cgf2bmp.exe
         %FPC_PATH% graphics\til\til2bmp.pas -obin\til2bmp.exe
         %FPC_PATH% graphics\pbr\pbr2bmp.pas -obin\pbr2bmp.exe
-        cm bin
+        cd bin
         rm *.o
 
     - name: Compress binaries (ZIP)
