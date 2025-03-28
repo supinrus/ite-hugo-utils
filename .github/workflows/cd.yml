@@ -1,0 +1,138 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  linux:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ubuntu-22.04, ubuntu-24.04-arm]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        sudo apt update -y
+        sudo apt install -y fpc
+
+    - name: Compile Pascal code
+      run: |
+        make build
+
+    - name: Compress binaries
+      run: |
+        tar -czf ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+        
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
+        path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+  macOS:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [macos-latest]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        brew install fpc
+
+    - name: Compile Pascal code
+      run: |
+        make build
+
+    - name: Compress binaries
+      run: |
+        tar -czf ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+        
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
+        path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.tar.gz
+
+  windows:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [windows-latest]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Install Free Pascal
+      run: |
+        choco install freepascal -y
+        choco install make -y
+
+    - name: Compile Pascal code
+      shell: cmd
+      run: |
+        mkdir bin
+        set FPC_PATH="C:\tools\freepascal\bin\i386-Win32\fpc.exe"
+        %FPC_PATH% archive\bigfile\bigfileunpacker.pas -obin\bigfileunpacker.exe
+        %FPC_PATH% archive\hugo5dos\unpackhugo5dat.pas -obin\unpackhugo5dat.exe
+        %FPC_PATH% archive\hugo4dos\unpackhugo4dat.pas -obin\unpackhugo4dat.exe
+        %FPC_PATH% archive\hugo_magick_oak\resdatunpack.pas -obin\resdatunpack.exe
+        %FPC_PATH% archive\iteres\iteresunpack.pas -obin\iteresunpack.exe
+        %FPC_PATH% archive\hugo3dos\unpack4hugo.pas -obin\unpack4hugo.exe
+        %FPC_PATH% archive\skaermtrolden_hugo_dat\pack.pas -obin\pack.exe
+        %FPC_PATH% archive\skaermtrolden_hugo_dat\unpack2.pas -obin\unpack2.exe
+        %FPC_PATH% archive\hugoxl\unpackmiscdat.pas -obin\unpackmiscdat.exe
+        %FPC_PATH% archive\hugoxl\unpack_sbk.pas -obin\unpack_sbk.exe
+        %FPC_PATH% config\hugoxl\unpack_cfb.pas -obin\unpack_cfb.exe
+        %FPC_PATH% sync\oos\txt2oos.pas -obin\txt2oos.exe
+        %FPC_PATH% sync\oos\oos2txt.pas -obin\oos2txt.exe
+        %FPC_PATH% graphics\cbr\cbr2bmp.pas -obin\cbr2bmp.exe
+        %FPC_PATH% graphics\brs\brs2bmp.pas -obin\brs2bmp.exe
+        %FPC_PATH% graphics\skaermtrolden_speach_cloud\decodespeach2.pas -obin\decodespeach2.exe
+        %FPC_PATH% graphics\skaermtrolden_speach_cloud\encodespeach.pas -obin\encodespeach.exe
+        %FPC_PATH% graphics\lzp\lzp2bmp.pas -obin\lzp2bmp.exe
+        %FPC_PATH% graphics\cgf\cgf2bmp.pas -obin\cgf2bmp.exe
+        %FPC_PATH% graphics\til\til2bmp.pas -obin\til2bmp.exe
+        %FPC_PATH% graphics\pbr\pbr2bmp.pas -obin\pbr2bmp.exe
+        cd bin
+        rm *.o
+
+    - name: Compress binaries (ZIP)
+      run: |
+        cd bin
+        7z a ..\ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip *.exe
+
+    - name: Create release
+      if: success()
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip
+
+
+    - name: Upload release asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}
+        path: ite-hugo-utils-${{ runner.os }}-${{ runner.arch }}.zip
